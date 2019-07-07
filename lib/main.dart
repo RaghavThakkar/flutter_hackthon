@@ -37,7 +37,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void navigationPage() {
-    Navigator.of(context).pushReplacementNamed('/DustBinRequest');
+    Navigator.of(context).pushReplacementNamed('/HomeScreen');
   }
 
   @override
@@ -96,7 +96,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 height: 200.0,
                 child: FluttieAnimation(shockedEmoji)),
             Text(
-              "Save world !",
+              "Clean Up !",
               style: TextStyle(fontSize: 40, color: Colors.green),
             )
           ],

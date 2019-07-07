@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hackthon/DustbinListing.dart';
 
+import 'CurrentLocation.dart';
+
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -22,7 +24,7 @@ class HomeScreen extends StatelessWidget {
           body: TabBarView(
               children: <Widget>[
                 DustbinListing(),
-                DustbinListing()
+                CurrentLocation()
               ]
           )
       ),

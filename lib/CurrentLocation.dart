@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -17,8 +19,14 @@ class CurrentLocation extends StatefulWidget {
 
 class _CurrentLocationState extends State<CurrentLocation> {
   bool _saving = false;
+  FirestoreDatabase firestoreDatabase = FirestoreDatabase();
 
-  final FirestoreDatabase firestoreDatabase = FirestoreDatabase();
+  @override
+  void initState() {
+    reference = Firestore.instance.collection('Dustbins');
+  }
+
+  CollectionReference reference;
 
   Completer<GoogleMapController> _controller = Completer();
   static const LatLng _center = const LatLng(22.2926019, 73.1203902);
@@ -73,14 +81,29 @@ class _CurrentLocationState extends State<CurrentLocation> {
 
   void _onMapCreated(GoogleMapController controller) {
     _controller.complete(controller);
+    loadDustBins();
+  }
+
+  void loadDustBins() {
+    reference.snapshots().listen((querySnapshot) {
+      querySnapshot.documentChanges.forEach((change) {
+        Dustbin dustbin = Dustbin.fromSnapshot(change.document);
+        setState(() {
+          _markers.add(Marker(
+            // This marker id can be anything that uniquely identifies each marker.
+            markerId: MarkerId(dustbin.location.toString()),
+            position:
+                LatLng(dustbin.location.latitude, dustbin.location.longitude),
+            icon: BitmapDescriptor.defaultMarker,
+          ));
+        });
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Bin Locator'),
-      ),
       body: ModalProgressHUD(
         child: Container(
           child: Stack(
@@ -89,6 +112,17 @@ class _CurrentLocationState extends State<CurrentLocation> {
                 onLongPress: (latlang) {
                   _onAddMarkerButtonPressed(latlang);
                 },
+                gestureRecognizers: Set()
+                  ..add(Factory<PanGestureRecognizer>(
+                      () => PanGestureRecognizer()))
+                  ..add(Factory<ScaleGestureRecognizer>(
+                      () => ScaleGestureRecognizer()))
+                  ..add(Factory<TapGestureRecognizer>(
+                      () => TapGestureRecognizer()))
+                  ..add(Factory<HorizontalDragGestureRecognizer>(
+                      () => HorizontalDragGestureRecognizer()))
+                  ..add(Factory<VerticalDragGestureRecognizer>(
+                      () => VerticalDragGestureRecognizer())),
                 onMapCreated: _onMapCreated,
                 initialCameraPosition: CameraPosition(
                   target: _center,
@@ -101,14 +135,14 @@ class _CurrentLocationState extends State<CurrentLocation> {
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Align(
-                  alignment: Alignment.topRight,
+                  alignment: Alignment.bottomRight,
                   child: Column(
                     children: <Widget>[
                       FloatingActionButton(
                         onPressed: () async {
                           Position position = await Geolocator()
                               .getCurrentPosition(
-                              desiredAccuracy: LocationAccuracy.high);
+                                  desiredAccuracy: LocationAccuracy.high);
                           print(position);
                           _onAddMarkerButtonPressed(
                               LatLng(position.latitude, position.longitude));
@@ -129,7 +163,7 @@ class _CurrentLocationState extends State<CurrentLocation> {
     );
   }
 
-/// When we're ready to show the animations, this method will create the main
-/// content showcasing them.
+  /// When we're ready to show the animations, this method will create the main
+  /// content showcasing them.
 
 }
