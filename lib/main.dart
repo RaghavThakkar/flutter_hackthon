@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:fluttie/fluttie.dart';
 
+import 'CurrentLocation.dart';
 import 'HomeScreen.dart';
 
 void main() {
@@ -13,7 +14,8 @@ void main() {
     ),
     home: SplashScreen(),
     routes: <String, WidgetBuilder>{
-      '/HomeScreen': (BuildContext context) => new HomeScreen()
+      '/HomeScreen': (BuildContext context) => HomeScreen(),
+      '/CurrentLocation': (BuildContext context) => CurrentLocation()
     },
   ));
 }
@@ -33,7 +35,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void navigationPage() {
-    Navigator.of(context).pushReplacementNamed('/HomeScreen');
+    Navigator.of(context).pushReplacementNamed('/CurrentLocation');
   }
 
   @override
