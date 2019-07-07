@@ -1,25 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hackthon/DustbinListing.dart';
 
-
-class HomeScreen extends StatefulWidget {
-  @override
-  _HomeScreenState createState() => new _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
+class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('HomeScreen'),
-      ),
-      body: Center(
-        child: Text("Test data"),
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+          appBar: AppBar(
+            bottom: TabBar(
+                tabs: [
+                  Tab(text: 'List Dustbins', icon: Icon(Icons.restore_from_trash),),
+                  Tab(text: 'Display On Map', icon: Icon(Icons.map),),
+                ]
+            ),
+            title: Text('Get your Surroundings clean',
+              style: TextStyle(
+                  fontSize: 16
+              ),),
+          ),
+          body: TabBarView(
+              children: <Widget>[
+                DustbinListing(),
+                DustbinListing()
+              ]
+          )
       ),
     );
   }
-
-  /// When we're ready to show the animations, this method will create the main
-  /// content showcasing them.
-
 }
