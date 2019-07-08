@@ -17,6 +17,19 @@ class _DustbinListingState extends State<DustbinListing> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.bottomLeft,
+            end: Alignment(1.2, 0.0),
+            // 10% of the width, so there are ten blinds.
+            colors: [
+//              Colors.red,const Color(0xFFFFFFEE),Colors.green
+              Colors.red,Colors.yellow,Colors.green
+            ],
+            // whitish to gray
+            tileMode: TileMode.mirror, // repeats the gradient over the canvas
+          ),
+        ),
           padding: const EdgeInsets.all(8.0),
           child: StreamBuilder<QuerySnapshot>(
               stream: firestoreDatabase.getDustbins(),
