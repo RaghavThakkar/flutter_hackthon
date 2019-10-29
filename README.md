@@ -1,6 +1,6 @@
 # flutter_hackthon
 
-A new Flutter application.
+A new Flutter application on Smart Trash Collector.
 
 ## Getting Started
 
